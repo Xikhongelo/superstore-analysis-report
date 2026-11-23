@@ -1,9 +1,7 @@
 -- Superstore retail sales analysis | PostgreSQL
--- The loader writes public.orders. Run the checks below after loading.
--- Each row is an order line; a single order_id can appear on several rows.
--- Complete each exercise, then copy only verified outputs into the report.
 
--- 0. Basic import sanity check: compare the counts to the source worksheet.
+
+-- Check the import
 SELECT
     COUNT(*) AS order_lines,
     COUNT(DISTINCT row_id) AS distinct_row_ids,
@@ -12,7 +10,7 @@ SELECT
     MAX(order_date) AS last_order_date
 FROM public.orders;
 
--- 1. Confirm grain and coverage.
+-- Validation and data quality check
 SELECT
     COUNT(*) AS order_lines,
     COUNT(DISTINCT row_id) AS distinct_row_ids,
@@ -34,13 +32,13 @@ SELECT
     MAX(discount) AS max_discount
 FROM public.orders;
 
--- Inspect the actual discount values and how common they are.
+-- Discount values (type check)
 SELECT discount, COUNT(*) AS order_lines
 FROM public.orders
 GROUP BY discount
 ORDER BY discount;
 
--- 2. Establish headline metrics.
+-- Calculation of overall sales, profit, margin and average order value
 SELECT
     COALESCE(SUM(sales), 0) AS total_sales,
 
@@ -61,7 +59,7 @@ SELECT
     ) AS average_sales_per_order
 FROM public.orders;
 
--- 3. Find profitable and unprofitable product groups.
+-- Profitability by category and sub-category
 SELECT
     category,
     ROUND(SUM(sales), 2) AS total_sales,
@@ -81,7 +79,7 @@ FROM public.orders
 GROUP BY category, sub_category
 ORDER BY SUM(profit) ASC;
 
--- 4. Compare discount bands without assuming causation.
+-- Comparison ofprofitability by discount level.
 WITH discount_analysis AS (
     SELECT
         CASE
@@ -140,7 +138,7 @@ GROUP BY
 ORDER BY
     band_order;
 
--- 5. Check whether one result is stable over time.
+-- Summary of sales, profit and margin by year.
 SELECT
     EXTRACT(YEAR FROM order_date) AS order_year,
     ROUND(SUM(sales), 2) AS total_sales,
