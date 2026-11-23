@@ -1,0 +1,22 @@
+# Local inputs and exports (not part of the portfolio)
+/data/
+/exports/
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+*.tsv
+*.dump
+*.backup
+.pgpass
+.pg_service.conf
+
+# Local environment, credentials and generated Python files
+.env
+.env.*
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+.ipynb_checkpoints/
